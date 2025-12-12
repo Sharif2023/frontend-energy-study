@@ -1,44 +1,59 @@
-<!-- IDENTICAL HTML STRUCTURE REQUIRED -->
-<div id="app">
-  <!-- Navigation -->
-  <nav>
-    <a href="/">Home</a>
-    <a href="/about">About</a> 
-    <a href="/contact">Contact</a>
-  </nav>
+<script>
+  import { onMount } from 'svelte';
+  import { incrementPageLoads, incrementItemCounter, decrementItemCounter, refreshWidgets } from '../lib/stores/appStore.js';
+  import StatsPanel from '../lib/components/StatsPanel.svelte';
+  import ItemList from '../lib/components/ItemList.svelte';
+  import WeatherWidget from '../lib/components/WeatherWidget.svelte';
+  import PlaceholderWidget from '../lib/components/PlaceholderWidget.svelte';
+  
+  let items = [];
+  const widgetIds = Array.from({ length: 24 }, (_, i) => i + 2);
+  
+  onMount(() => {
+    incrementPageLoads();
+  });
+  
+  function handleAddItems(event) {
+    const amount = event.detail;
+    const newItems = Array.from({ length: amount }, (_, i) => ({
+      id: Date.now() + i,
+      name: `Item ${items.length + i + 1}`
+    }));
+    items = [...items, ...newItems];
+    incrementItemCounter(amount);
+  }
+  
+  function handleRemoveItems(event) {
+    const amount = event.detail;
+    const removed = items.slice(0, amount);
+    items = items.slice(amount);
+    decrementItemCounter(removed.length);
+  }
+  
+  function handleRefreshWidgets() {
+    refreshWidgets();
+  }
+</script>
 
-  <!-- Stats Panel -->
-  <div class="stats">
-    <span>Total Items: <span id="item-count">0</span></span>
-    <span>Widgets Active: 25</span>
-    <span>Page Loads: <span id="page-count">0</span></span>
-  </div>
-
-  <!-- Controls -->
+<div class="page">
+  <StatsPanel itemCount={items.length} />
+  
   <div class="controls">
-    <input id="item-input" type="number" value="100" min="10" max="500">
-    <button id="add-btn">Add Items</button>
-    <button id="remove-btn">Remove 50 Items</button>
-    <button id="filter-btn">Filter "Item"</button>
-    <button id="sort-btn">Sort by Name</button>
-    <button id="refresh-widgets">Refresh Widgets</button>
+    <button id="refresh-widgets" on:click={handleRefreshWidgets}>
+      Refresh Widgets
+    </button>
   </div>
 
-  <!-- Dashboard Grid (25 widgets) -->
   <div class="dashboard" id="widget-grid">
-    <!-- Widget 1: Live Weather API -->
-    <div class="widget weather">
-      <h3>Weather</h3>
-      <div id="weather-data">Loading...</div>
-    </div>
-    <!-- Widgets 2-25: Placeholders -->
-    <div class="widget" data-id="2">...</div>
-    <!-- ... repeat 24x with random colors/numbers -->
+    <WeatherWidget />
+    {#each widgetIds as id}
+      <PlaceholderWidget {id} />
+    {/each}
   </div>
 
-  <!-- Item List -->
-  <div class="item-list">
-    <h3>Dynamic Items (<span id="list-count">0</span>)</h3>
-    <ul id="item-list"></ul>
-  </div>
+  <ItemList 
+    {items}
+    on:addItems={handleAddItems}
+    on:removeItems={handleRemoveItems}
+  />
 </div>

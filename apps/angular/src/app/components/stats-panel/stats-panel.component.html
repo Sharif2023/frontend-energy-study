@@ -1,0 +1,6 @@
+<div class="stats">
+  <span>Total Items: <span id="item-count">{{ itemCount }}</span></span>
+  <span>Widgets Active: 25</span>
+  <span>Widget Refreshes: <span id="widget-refresh-count">{{ (widgetRefreshCounter$ | async) || 0 }}</span></span>
+  <span>Page Loads: <span id="page-count">{{ (pageLoads$ | async) || 0 }}</span></span>
+</div>

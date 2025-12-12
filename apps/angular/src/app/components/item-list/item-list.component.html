@@ -1,0 +1,31 @@
+<div>
+  <div class="controls">
+    <input
+      id="item-input"
+      type="number"
+      [(ngModel)]="addAmount"
+      min="10"
+      max="500"
+    />
+    <button id="add-btn" (click)="handleAdd()">Add {{ addAmount }} Items</button>
+    <button id="remove-btn" (click)="handleRemove()">Remove 50 Items</button>
+    <button id="filter-btn" (click)="handleFilter()">
+      {{ filterQuery ? 'Clear Filter' : 'Filter "Item"' }}
+    </button>
+    <button id="sort-btn" (click)="handleSort()">
+      Sort by {{ sortBy === 'id' ? 'Name' : 'ID' }}
+    </button>
+  </div>
+
+  <div class="item-list">
+    <h3>
+      Dynamic Items (<span id="list-count">{{ filteredAndSortedItems.length }}</span>)
+    </h3>
+    <ul id="item-list">
+      <li *ngFor="let item of filteredAndSortedItems" class="item">
+        <span>ID: {{ item.id }}</span>
+        <span>{{ item.name }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

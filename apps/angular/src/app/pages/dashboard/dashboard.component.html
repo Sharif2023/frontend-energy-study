@@ -1,0 +1,23 @@
+<div class="page">
+  <app-stats-panel [itemCount]="items.length"></app-stats-panel>
+  
+  <div class="controls">
+    <button id="refresh-widgets" (click)="handleRefreshWidgets()">
+      Refresh Widgets
+    </button>
+  </div>
+
+  <div class="dashboard" id="widget-grid">
+    <app-weather-widget></app-weather-widget>
+    <app-placeholder-widget
+      *ngFor="let id of widgetIds"
+      [id]="id"
+    ></app-placeholder-widget>
+  </div>
+
+  <app-item-list
+    [items]="items"
+    (addItems)="handleAddItems($event)"
+    (removeItems)="handleRemoveItems($event)"
+  ></app-item-list>
+</div>

@@ -1,0 +1,14 @@
+{
+  "name": "energy-test-scripts",
+  "version": "1.0.0",
+  "description": "Test scripts for energy consumption measurement",
+  "scripts": {
+    "test:simple": "node scenario-a-simple.js",
+    "test:medium": "node scenario-b-medium.js",
+    "test:complex": "node scenario-c-complex.js",
+    "test:all": "node run-all-scenarios.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  }
+}

@@ -1,0 +1,50 @@
+<div class="page">
+  <div class="contact-page">
+    <h1>Contact</h1>
+    <form class="contact-form" (ngSubmit)="handleSubmit()" #contactForm="ngForm">
+      <div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          [(ngModel)]="formData.name"
+          [class.error]="errors['name'] && contactForm.submitted"
+        />
+        <div *ngIf="errors['name'] && contactForm.submitted" class="error-message">
+          {{ errors['name'] }}
+        </div>
+      </div>
+
+      <div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          [(ngModel)]="formData.email"
+          [class.error]="errors['email'] && contactForm.submitted"
+        />
+        <div *ngIf="errors['email'] && contactForm.submitted" class="error-message">
+          {{ errors['email'] }}
+        </div>
+      </div>
+
+      <div>
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          rows="5"
+          [(ngModel)]="formData.message"
+          [class.error]="errors['message'] && contactForm.submitted"
+        ></textarea>
+        <div *ngIf="errors['message'] && contactForm.submitted" class="error-message">
+          {{ errors['message'] }}
+        </div>
+      </div>
+
+      <button type="submit">Send Message</button>
+      <div *ngIf="submitted" class="success-message">
+        Message sent successfully!
+      </div>
+    </form>
+  </div>
+</div>
