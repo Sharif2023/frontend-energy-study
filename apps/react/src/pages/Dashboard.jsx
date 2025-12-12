@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     incrementPageLoads();
-  }, [incrementPageLoads]);
+  }, []);
 
   const handleAddItems = (amount) => {
     const newItems = Array.from({ length: amount }, (_, i) => ({

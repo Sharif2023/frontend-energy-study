@@ -23,8 +23,23 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 async function runScenario() {
   console.log(`Starting Scenario B (Medium) for ${FRAMEWORK}...`);
   
+  // Try to find Chrome on Windows
+  const chromePaths = [
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Users\\Admin\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe'
+  ];
+  let executablePath = null;
+  for (const chromePath of chromePaths) {
+    if (fs.existsSync(chromePath)) {
+      executablePath = chromePath;
+      break;
+    }
+  }
+  
   const browser = await puppeteer.launch({
     headless: false,
+    executablePath: executablePath,
     args: ['--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
   });
   
