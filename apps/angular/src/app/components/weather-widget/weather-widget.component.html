@@ -1,13 +1,13 @@
 <div class="widget weather">
-  <h3>Weather</h3>
+  <h3>🌤️ Weather</h3>
   <div id="weather-data">
     <div *ngIf="loading">Loading...</div>
-    <div *ngIf="error">{{ error }}</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
     <div *ngIf="weatherData && !loading && !error">
       <div><strong>{{ weatherData.name }}</strong></div>
-      <div>Temp: {{ weatherData.main.temp }}°C</div>
-      <div>Humidity: {{ weatherData.main.humidity }}%</div>
-      <div>{{ weatherData.weather[0].description }}</div>
+      <div>🌡️ Temp: {{ weatherData.main.temp }}°C</div>
+      <div>💧 Humidity: {{ weatherData.main.humidity }}%</div>
+      <div>☁️ {{ weatherData.weather[0].description }}</div>
     </div>
   </div>
 </div>

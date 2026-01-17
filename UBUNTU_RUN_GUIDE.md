@@ -30,41 +30,36 @@ wget https://github.com/hubblo-org/scaphandre/releases/download/v1.0.2/scaphandr
 # Install
 sudo dpkg -i scaphandre_v1.0.2-deb11_amd64.deb
 
-#If there are unmet dependencies, fix them by running:
+# If there are unmet dependencies, fix them by running:
 sudo apt-get install -f
-
+```
 
 ### Fix: `scaphandre: libssl.so.1.1 not found` on Ubuntu 22.04 / 24.04 (If needed)
 
 This guide explains how to fix the following error when running **Scaphandre** on modern Ubuntu systems:
 
-Step 1 — Add temporary focal-security repo
-
+**Step 1 — Add temporary focal-security repo**
 ```bash
 echo "deb http://security.ubuntu.com/ubuntu focal-security main" | sudo tee /etc/apt/sources.list.d/temp-libssl.list
 ```
 
-Step 2 — Update package lists
-
+**Step 2 — Update package lists**
 ```bash
 sudo apt update
 ```
 
-Step 3 — Install libssl1.1
-
+**Step 3 — Install libssl1.1**
 ```bash
 sudo apt install libssl1.1
 ```
 
-Step 4 — Remove the temporary repo file
-
+**Step 4 — Remove the temporary repo file**
 ```bash
 sudo rm /etc/apt/sources.list.d/temp-libssl.list
 sudo apt update
 ```
 
-Step 5 — Verify installation
-
+**Step 5 — Verify installation**
 ```bash
 scaphandre --version
 ```
@@ -110,13 +105,48 @@ npm install
 # 5. Install Test Script dependencies (Puppeteer)
 cd ../../test-scripts
 npm install
+
+# 6. Create measurements directories
+cd ..
+mkdir -p measurements/{react,vue,angular,svelte}
 ```
 
 ---
 
-## 3. Running Experiments &amp; Collecting Data
+## 3. Test Scenarios Overview
 
-The data collection process follows the methodology outlined in README.md. Each experiment requires running the web application, monitoring energy consumption with Scaphandre, executing test scenarios, and merging the data.
+Based on the research methodology, there are **3 test scenarios** with increasing complexity:
+
+| Scenario | Description | Items Added | Expected Duration |
+|----------|-------------|-------------|-------------------|
+| **A - Simple** | 100 items × 50 times | 5,000 total | ~20-50 seconds |
+| **B - Medium** | 100 items × 250 times | 25,000 total | ~100-200 seconds |
+| **C - Complex** | 100 items × 500 times | 50,000 total | ~300-600 seconds |
+
+### What Each Scenario Tests:
+
+**Scenario A - Simple (100 items × 50 time)**
+- Load dashboard
+- Add 5,000 items (triggers re-render)
+- Filter items (DOM mutations)
+- Navigate between 3 pages
+
+**Scenario B - Medium (100 items × 250 time)**
+- Load dashboard
+- Add 25,000 items
+- Filter + sort (heavy computation)
+- Refresh all 25 widgets
+- Navigate + form submission
+
+**Scenario C - Complex (100 items × 500 time)**
+- Load dashboard
+- Add 50,000 items
+- Filter + sort + multiple widget updates
+- Rapid navigation (3 pages × 2)
+
+---
+
+## 4. Running Experiments & Collecting Data
 
 ### Overview: Data Collection Workflow
 
@@ -141,60 +171,44 @@ The data collection process follows the methodology outlined in README.md. Each 
 
 Open **Terminal 1** and start the framework you want to test.
 
-**For React:**
+| Framework | Command | Wait for | URL |
+|-----------|---------|----------|-----|
+| React | `cd apps/react && npm start` | "Compiled successfully!" | http://localhost:3000 |
+| Vue | `cd apps/vue && npm run serve` | "DONE Compiled successfully" | http://localhost:8080 |
+| Angular | `cd apps/angular && npm start` | Compilation complete | http://localhost:4200 |
+| Svelte | `cd apps/svelte && npm run dev` | "ready in..." | http://localhost:5173 |
+
+**Example for React:**
 ```bash
-cd apps/react
+cd ~/Downloads/frontend-energy-study/apps/react
 npm start
 # Wait for "Compiled successfully!" message
 # App runs on http://localhost:3000
-```
-
-**For Vue:**
-```bash
-cd apps/vue
-npm run serve
-# Wait for "DONE Compiled successfully" message
-# App runs on http://localhost:8080
-```
-
-**For Angular:**
-```bash
-cd apps/angular
-npm start
-# Wait for compilation to complete
-# App runs on http://localhost:4200
-```
-
-**For Svelte:**
-```bash
-cd apps/svelte
-npm run dev
-# App runs on http://localhost:5173
 ```
 
 ✅ **Verify:** Open the URL in your browser to confirm the app is running.
 
 ---
 
-#### Step 2: Start Energy Monitoring with Scaphandre
+#### Step 2: Prepare Scaphandre Energy Monitoring
 
-Open **Terminal 2** for energy monitoring. Scaphandre will collect power consumption data.
+Open **Terminal 2** for energy monitoring. 
 
-**Choose duration based on scenario (with ~10% buffer):**
-- **Scenario A (Simple)**: Use `-t 60` (60 seconds)
-  - Expected test duration: 20-50 seconds
-- **Scenario B (Medium)**: Use `-t 240` (240 seconds / 4 minutes)
-  - Expected test duration: 100-200 seconds (1.7-3.3 minutes)
-- **Scenario C (Complex)**: Use `-t 660` (660 seconds / 11 minutes)
-  - Expected test duration: 300-600 seconds (5-10 minutes)
+**Choose duration based on scenario (with ~20% buffer):**
 
-**Example command for Simple scenario:**
+| Scenario | Expected Duration | Scaphandre Duration |
+|----------|-------------------|---------------------|
+| A - Simple | 20-50 seconds | `-t 60` (60 seconds) |
+| B - Medium | 100-200 seconds | `-t 300` (5 minutes) |
+| C - Complex | 300-600 seconds | `-t 720` (12 minutes) |
+
+**Prepare the command (DO NOT RUN YET):**
 ```bash
 cd ~/Downloads/frontend-energy-study
 sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json
 ```
 
-**Naming convention for files:**
+**File naming convention:**
 ```
 measurements/{framework}/energy_{scenario}_run{number}.json
 
@@ -213,60 +227,68 @@ Examples:
 Open **Terminal 3** for running automated test scripts.
 
 ```bash
-cd test-scripts
+cd ~/Downloads/frontend-energy-study/test-scripts
 ```
 
-**Important: Execute steps 2 and 3 almost simultaneously:**
+**🚨 CRITICAL: Execute steps 2 and 3 simultaneously:**
 
-1. In **Terminal 2**: Start Scaphandre monitoring command (from Step 2)
-2. **Immediately** switch to **Terminal 3** and run the test script:
-
-**For Scenario A - Simple (100 items x 50 time):**
-```bash
-# React
-node scenario-a-simple.js react 3000
-
-# Vue
-node scenario-a-simple.js vue 8080
-
-# Angular
-node scenario-a-simple.js angular 4200
-
-# Svelte
-node scenario-a-simple.js svelte 5173
-```
-
-**For Scenario B - Medium (100 items x 250 time):**
-```bash
-node scenario-b-medium.js react 3000
-# (adjust framework and port as needed)
-```
-
-**For Scenario C - Complex (100 items x 500 time):**
-```bash
-node scenario-c-complex.js react 3000
-# (adjust framework and port as needed)
-```
-
-**What happens:**
-- The test script will automate browser interactions (adding items, filtering, navigation, etc.)
-- Scaphandre will record energy consumption in parallel
-- Both will complete around the same time
-
-**Expected output from test script:**
-```
-Scenario completed successfully!
-Results saved to: measurements/react/simple.json
-Total duration: 3845ms
-```
+1. In **Terminal 2**: Press Enter to start Scaphandre monitoring
+2. **Immediately** switch to **Terminal 3** and run the test script
 
 ---
 
-#### Step 4: Wait for Scaphandre to Complete
+### Complete Commands for All Frameworks & Scenarios
 
-Switch back to **Terminal 2** and wait for Scaphandre to finish recording.
+#### Scenario A - Simple (100 items × 50 time)
 
-**Expected output:**
+| Framework | Terminal 1 (App) | Terminal 2 (Energy) | Terminal 3 (Test) |
+|-----------|------------------|---------------------|-------------------|
+| React | `cd apps/react && npm start` | `sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json` | `node scenario-a-simple.js react 3000` |
+| Vue | `cd apps/vue && npm run serve` | `sudo scaphandre json -t 60 -f measurements/vue/energy_simple_run1.json` | `node scenario-a-simple.js vue 8080` |
+| Angular | `cd apps/angular && npm start` | `sudo scaphandre json -t 60 -f measurements/angular/energy_simple_run1.json` | `node scenario-a-simple.js angular 4200` |
+| Svelte | `cd apps/svelte && npm run dev` | `sudo scaphandre json -t 60 -f measurements/svelte/energy_simple_run1.json` | `node scenario-a-simple.js svelte 5173` |
+
+#### Scenario B - Medium (100 items × 250 time)
+
+| Framework | Terminal 2 (Energy) | Terminal 3 (Test) |
+|-----------|---------------------|-------------------|
+| React | `sudo scaphandre json -t 300 -f measurements/react/energy_medium_run1.json` | `node scenario-b-medium.js react 3000` |
+| Vue | `sudo scaphandre json -t 300 -f measurements/vue/energy_medium_run1.json` | `node scenario-b-medium.js vue 8080` |
+| Angular | `sudo scaphandre json -t 300 -f measurements/angular/energy_medium_run1.json` | `node scenario-b-medium.js angular 4200` |
+| Svelte | `sudo scaphandre json -t 300 -f measurements/svelte/energy_medium_run1.json` | `node scenario-b-medium.js svelte 5173` |
+
+#### Scenario C - Complex (100 items × 500 time)
+
+| Framework | Terminal 2 (Energy) | Terminal 3 (Test) |
+|-----------|---------------------|-------------------|
+| React | `sudo scaphandre json -t 720 -f measurements/react/energy_complex_run1.json` | `node scenario-c-complex.js react 3000` |
+| Vue | `sudo scaphandre json -t 720 -f measurements/vue/energy_complex_run1.json` | `node scenario-c-complex.js vue 8080` |
+| Angular | `sudo scaphandre json -t 720 -f measurements/angular/energy_complex_run1.json` | `node scenario-c-complex.js angular 4200` |
+| Svelte | `sudo scaphandre json -t 720 -f measurements/svelte/energy_complex_run1.json` | `node scenario-c-complex.js svelte 5173` |
+
+---
+
+#### Step 4: Wait for Completion
+
+Switch back to both terminals and wait for both to complete.
+
+**Expected output from Test Script (Terminal 3):**
+```
+Starting Scenario A (Simple) for react...
+1. Loading dashboard...
+2. Adding 5,000 items (50 × 100)...
+   Progress: 1000 items added...
+   Progress: 2000 items added...
+   ...
+3. Filtering items...
+4. Navigating to About...
+5. Navigating to Contact...
+6. Navigating back to Home...
+Scenario A completed in 28456ms
+Metrics saved to ../measurements/react/simple.json
+```
+
+**Expected output from Scaphandre (Terminal 2):**
 ```
 scaphandre::sensors: Sysinfo sees 20
 Scaphandre json exporter
@@ -274,81 +296,50 @@ Sending ⚡ metrics
 scaphandre::sensors: Not enough records for socket
 ```
 
-The "Not enough records for socket" message is normal—the tool still collects data successfully.
+> ℹ️ The "Not enough records for socket" message is normal—the tool still collects data successfully.
 
-**Verify the file was created:**
+**Verify files were created:**
 ```bash
-ls -lh measurements/react/energy_simple_run1.json
-# Should show file size (e.g., 9.9K)
+ls -lh measurements/react/
+# Should show:
+# energy_simple_run1.json (energy data from Scaphandre)
+# simple.json (performance metrics from test script)
 ```
 
 ---
 
-#### Step 5: Merge Energy Data with Performance Metrics
+#### Step 5: Calculate & Merge Energy Data
 
-The test script creates a performance file like `measurements/react/simple.json`, but it **lacks energy data**. You need to merge it with Scaphandre's output.
+The test script creates `simple.json` with performance metrics, but you need to calculate energy from Scaphandre's output.
 
-**Method 1: Manual Calculation (Quick for single tests)**
+**Quick Energy Calculation:**
+```bash
+# Install jq if not available
+sudo apt install jq
 
-1. **Open the Scaphandre JSON file:**
-   ```bash
-   cat measurements/react/energy_simple_run1.json | jq '.[] | .host.consumption' | head -20
-   ```
-   
-2. **Calculate Total Energy:**
-   - Look for "consumption" values in microjoules (μJ)
-   - Sum the socket consumption values across all time samples
-   - Convert microjoules to Joules: `Joules = μJ / 1,000,000`
-   
-   **Example calculation:**
-   ```
-   Sample 1: consumption = 2074437.0 μJ
-   Sample 2: consumption = 1934218.0 μJ
-   Total = 4008655.0 μJ = 4.01 Joules
-   ```
+# Calculate total energy (in microjoules)
+cat measurements/react/energy_simple_run1.json | jq '[.[].host.consumption] | add'
 
-3. **Calculate Peak Power (Watts):**
-   ```
-   Peak Power = Max consumption (μJ) / time interval (seconds) / 1,000,000
-   ```
+# Example output: 45234567.0 (this is in microjoules)
+# Convert to Joules: 45234567.0 / 1000000 = 45.23 Joules
+```
 
-4. **Update the performance JSON file:**
-   ```bash
-   nano measurements/react/simple.json
-   ```
-   
-   Add these fields:
-   ```json
-   {
-     "scenario": "simple",
-     "framework": "react",
-     "timestamp": "2024-01-01T12:00:00.000Z",
-     "actions": [...],
-     "totalDuration": 3845,
-     "energy_joules": 4.01,          ← ADD THIS
-     "peak_power_watts": 45.2,       ← ADD THIS
-     "memory_mb": 125.5,             ← ADD THIS (from browser metrics)
-     "dom_mutations": 1523           ← ADD THIS (from test output)
-   }
-   ```
+**Update the performance JSON:**
+```bash
+nano measurements/react/simple.json
+```
 
-**Method 2: Automated Script (Recommended for 120+ runs)**
-
-Create a Python script to parse Scaphandre JSON and merge automatically:
-
-```python
-# merge_energy_data.py (create this in analysis/)
-import json
-import glob
-
-# Example: sum all consumption values from Scaphandre
-with open('measurements/react/energy_simple_run1.json', 'r') as f:
-    data = json.load(f)
-    
-total_energy_uj = sum([record['host']['consumption'] for record in data])
-total_energy_j = total_energy_uj / 1_000_000
-
-print(f"Total Energy: {total_energy_j:.2f} Joules")
+Add these fields to the JSON:
+```json
+{
+  "scenario": "simple",
+  "framework": "react",
+  "timestamp": "2026-01-17T22:00:00.000Z",
+  "totalDuration": 28456,
+  "energy_joules": 45.23,
+  "peak_power_watts": 52.1,
+  "actions": [...]
+}
 ```
 
 ---
@@ -358,116 +349,148 @@ print(f"Total Energy: {total_energy_j:.2f} Joules")
 **For each framework and scenario combination:**
 1. Repeat the data collection **10 times** (e.g., `run1` through `run10`)
 2. Wait **10 minutes** between runs to allow system cooldown
-3. Store each run's data separately with unique filenames
+3. Increment the run number in filename for each repetition
 
-**Example for React + Simple scenario:**
-```
-measurements/react/energy_simple_run1.json
-measurements/react/energy_simple_run2.json
-...
-measurements/react/energy_simple_run10.json
+**Example for React Simple scenario (10 runs):**
+```bash
+# Run 1
+sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json
+node scenario-a-simple.js react 3000
+# Wait 10 minutes
+
+# Run 2
+sudo scaphandre json -t 60 -f measurements/react/energy_simple_run2.json
+node scenario-a-simple.js react 3000
+# Wait 10 minutes
+
+# ... continue until run10
 ```
 
 **Total runs needed:**
 ```
 4 frameworks × 3 scenarios × 10 repetitions = 120 runs
-Estimated time: ~2 hours per day (with cooldowns)
+Estimated total time: ~40 hours (spread across multiple days)
 ```
 
 ---
 
-### Complete Example: React Simple Scenario
+## 5. Complete Example: Run React Simple Scenario
 
-**Terminal 1:**
+Here's a complete walkthrough for one test run:
+
+### Terminal 1: Start React App
 ```bash
-cd apps/react
+cd ~/Downloads/frontend-energy-study/apps/react
 npm start
+# Wait until you see "Compiled successfully!"
+# Verify: http://localhost:3000 opens in browser
 ```
 
-**Terminal 2:**
+### Terminal 2: Prepare Energy Monitoring
 ```bash
 cd ~/Downloads/frontend-energy-study
+# Type this command but DON'T press Enter yet:
 sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json
 ```
 
-**Terminal 3:**
+### Terminal 3: Prepare Test Script
 ```bash
-cd test-scripts
+cd ~/Downloads/frontend-energy-study/test-scripts
+# Type this command but DON'T press Enter yet:
 node scenario-a-simple.js react 3000
 ```
 
-**After completion:**
-```bash
-# View energy data
-cat measurements/react/energy_simple_run1.json | head -100
+### Run Both Simultaneously
+1. Go to Terminal 2, press **Enter**
+2. Quickly switch to Terminal 3, press **Enter**
+3. Watch both terminals complete
 
-# Update performance file
-nano measurements/react/simple.json
-# (Add energy_joules and peak_power_watts fields)
+### After Completion
+```bash
+# Check files were created
+ls -lh measurements/react/
+
+# Calculate energy
+cat measurements/react/energy_simple_run1.json | jq '[.[].host.consumption] | add'
+
+# View test results
+cat measurements/react/simple.json
 ```
 
 ---
 
-### Data Collection Checklist
+## 6. Data Collection Checklist
 
 For each test run, ensure:
-- [ ] Framework application is running and accessible
-- [ ] Scaphandre monitoring started
-- [ ] Test scenario executed successfully
-- [ ] Energy data file created (check file size)
-- [ ] Performance metrics recorded
+- [ ] Framework application is running and accessible in browser
+- [ ] Scaphandre monitoring started (sudo required)
+- [ ] Test scenario executed successfully (check output)
+- [ ] Energy data file created (check file size > 1KB)
+- [ ] Performance metrics recorded in measurements folder
 - [ ] Energy data merged into final JSON
 - [ ] 10-minute cooldown before next run
-- [ ] Files named with proper convention
+- [ ] Files named with proper convention (framework_scenario_runN.json)
 
 ---
 
-### Troubleshooting
+## 7. Troubleshooting
 
-**Problem:** Scaphandre shows "Not enough records for socket"  
-**Solution:** This is normal—the tool still collects data. Verify the JSON file exists and has content.
-
-**Problem:** Energy file is empty or very small (&lt;1KB)  
-**Solution:** Ensure you have proper permissions (`sudo`) and your CPU supports RAPL (Intel Sandy Bridge or newer, AMD Zen or newer).
-
-**Problem:** Test scenario fails to connect  
-**Solution:** Verify the framework app is running and the port is correct. Check browser console for errors.
-
-**Problem:** Measurements folder doesn't exist  
-**Solution:** Create it manually:
-```bash
-mkdir -p measurements/{react,vue,angular,svelte}
-```
+| Problem | Solution |
+|---------|----------|
+| Scaphandre shows "Not enough records for socket" | This is normal—verify JSON file exists and has content |
+| Energy file is empty or very small (<1KB) | Ensure `sudo` was used; check CPU supports RAPL (Intel Sandy Bridge+, AMD Zen+) |
+| Test scenario fails to connect | Verify framework app is running; check correct port |
+| Measurements folder doesn't exist | Run: `mkdir -p measurements/{react,vue,angular,svelte}` |
+| "Cannot find module puppeteer" | Run: `cd test-scripts && npm install` |
+| Browser doesn't open during test | Install Chrome/Chromium: `sudo apt install chromium-browser` |
 
 ---
 
-## 4. Running the Analysis
+## 8. Running the Analysis
 
-Once you have collected data for all frameworks and scenarios, run the analysis.
+Once you have collected data for all frameworks and scenarios:
 
-1.  Navigate to the `analysis` directory.
-    ```bash
-    cd analysis
-    ```
-2.  Launch Jupyter Notebook.
-    ```bash
-    jupyter notebook
-    ```
-3.  Open `analyze.ipynb`.
-4.  Run all cells to generate charts and statistics.
-    *   **Note**: If you skipped the manual data merging step, the script will generate **synthetic (fake) energy data** for demonstration purposes. Ensure you check the output logs for "Warning: No energy data found".
+1. Navigate to the `analysis` directory:
+   ```bash
+   cd ~/Downloads/frontend-energy-study/analysis
+   ```
 
-## Summary of Commands
+2. Launch Jupyter Notebook:
+   ```bash
+   jupyter notebook
+   ```
 
-| Framework | Startup Command | Port |
-|-----------|-----------------|------|
-| React | `npm start` | 3000 |
-| Vue | `npm run serve` | 8080 |
-| Angular | `npm start` | 4200 |
-| Svelte | `npm run dev` | 5173 |
+3. Open `analyze.ipynb`
 
-| Scenario | Script | Approx Duration |
-|----------|--------|-----------------|
-| Simple | `scenario-a-simple.js` | 20-50s |
-| Medium | `scenario-b-medium.js` | 100-200s |
-| Complex | `scenario-c-complex.js` | 300-600s |
+4. Run all cells to generate charts and statistics
+
+> ⚠️ **Note**: If energy data is missing, the script will generate synthetic data for demonstration purposes. Check output for "Warning: No energy data found".
+
+---
+
+## 9. Quick Reference
+
+### Framework Commands
+
+| Framework | Start Command | Port | Stop |
+|-----------|---------------|------|------|
+| React | `npm start` | 3000 | Ctrl+C |
+| Vue | `npm run serve` | 8080 | Ctrl+C |
+| Angular | `npm start` | 4200 | Ctrl+C |
+| Svelte | `npm run dev` | 5173 | Ctrl+C |
+
+### Test Script Commands
+
+| Scenario | Script | Items | Duration |
+|----------|--------|-------|----------|
+| Simple | `node scenario-a-simple.js {framework} {port}` | 5,000 | 20-50s |
+| Medium | `node scenario-b-medium.js {framework} {port}` | 25,000 | 100-200s |
+| Complex | `node scenario-c-complex.js {framework} {port}` | 50,000 | 300-600s |
+
+### Scaphandre Duration Settings
+
+| Scenario | Duration Flag |
+|----------|---------------|
+| Simple | `-t 60` |
+| Medium | `-t 300` |
+| Complex | `-t 720` |
