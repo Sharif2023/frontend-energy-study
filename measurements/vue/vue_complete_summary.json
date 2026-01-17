@@ -1,0 +1,28 @@
+{
+  "framework": "vue",
+  "timestamp": "2026-01-11T17:35:00Z",
+  "scenarios": {
+    "simple": {
+      "totalDuration_ms": 0,
+      "energy_joules": 132.63,
+      "peak_power_watts": 13.53,
+      "scaphandre_duration_s": 57.16
+    },
+    "medium": {
+      "totalDuration_ms": 48468,
+      "energy_joules": 153.34,
+      "peak_power_watts": 10.13,
+      "scaphandre_duration_s": 57.66
+    },
+    "complex": {
+      "totalDuration_ms": 210346,
+      "energy_joules": 1326.65,
+      "peak_power_watts": 24.91,
+      "scaphandre_duration_s": 310.83
+    }
+  },
+  "grand_totals": {
+    "energy_joules": 1612.61,
+    "peak_power_watts": 24.91
+  }
+}

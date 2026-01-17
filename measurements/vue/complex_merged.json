@@ -1,0 +1,41 @@
+{
+    "scenario": "complex",
+    "framework": "vue",
+    "timestamp": "2026-01-11T11:17:42.207Z",
+    "actions": [
+        {
+            "action": "load_dashboard",
+            "duration": 686
+        },
+        {
+            "action": "add_50000_items",
+            "duration": 198561,
+            "iterations": 500
+        },
+        {
+            "action": "filter_items",
+            "duration": 1174
+        },
+        {
+            "action": "sort_items",
+            "duration": 1444
+        },
+        {
+            "action": "refresh_widgets_multiple",
+            "duration": 1780,
+            "iterations": 3
+        },
+        {
+            "action": "rapid_navigation",
+            "duration": 2694,
+            "transitions": 5
+        },
+        {
+            "action": "total",
+            "duration": 210346
+        }
+    ],
+    "totalDuration": 210346,
+    "energy_joules": 1326.65,
+    "peak_power_watts": 24.91
+}

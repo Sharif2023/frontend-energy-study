@@ -1,0 +1,20 @@
+{
+  "framework": "vue",
+  "scenarios": {
+    "simple": {
+      "totalDuration": 14034,
+      "energy_joules": 0.0,
+      "peak_power_watts": 0
+    },
+    "medium": {
+      "totalDuration": 48468,
+      "energy_joules": 0.0,
+      "peak_power_watts": 0
+    },
+    "complex": {
+      "totalDuration": 214343,
+      "energy_joules": 0.0,
+      "peak_power_watts": 0
+    }
+  }
+}

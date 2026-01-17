@@ -22,7 +22,7 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 
 async function runScenario() {
   console.log(`Starting Scenario A (Simple) for ${FRAMEWORK}...`);
-  
+
   // Try to find Chrome on Windows
   const chromePaths = [
     'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -36,18 +36,18 @@ async function runScenario() {
       break;
     }
   }
-  
+
   const browser = await puppeteer.launch({
     headless: false,
     executablePath: executablePath,
     args: ['--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
   });
-  
+
   const page = await browser.newPage();
-  
+
   // Enable performance monitoring
   await page.setViewport({ width: 1920, height: 1080 });
-  
+
   // Collect performance metrics
   const metrics = {
     scenario: 'simple',
@@ -55,7 +55,7 @@ async function runScenario() {
     timestamp: new Date().toISOString(),
     actions: []
   };
-  
+
   try {
     // 1. Load dashboard
     console.log('1. Loading dashboard...');
@@ -64,16 +64,21 @@ async function runScenario() {
     const loadTime = Date.now() - startTime;
     metrics.actions.push({ action: 'load_dashboard', duration: loadTime });
     await page.waitForTimeout(1000);
-    
-    // 2. Add 100 items
-    console.log('2. Adding 100 items...');
+
+    // 2. Add 100 items × 50 times = 1,000 items
+    console.log('2. Adding 1,000 items (50 × 100)...');
     const addStart = Date.now();
-    await page.click('#add-btn');
-    await page.waitForTimeout(500); // Wait for render
+    for (let i = 0; i < 50; i++) {
+      await page.click('#add-btn');
+      await page.waitForTimeout(100); // Wait for render
+      if (i % 10 === 0) {
+        console.log(`   Progress: ${(i + 1) * 100} items added...`);
+      }
+    }
     const addTime = Date.now() - addStart;
-    metrics.actions.push({ action: 'add_100_items', duration: addTime });
+    metrics.actions.push({ action: 'add_1000_items', duration: addTime, iterations: 50 });
     await page.waitForTimeout(500);
-    
+
     // 3. Filter items
     console.log('3. Filtering items...');
     const filterStart = Date.now();
@@ -82,46 +87,46 @@ async function runScenario() {
     const filterTime = Date.now() - filterStart;
     metrics.actions.push({ action: 'filter_items', duration: filterTime });
     await page.waitForTimeout(500);
-    
+
     // 4. Navigate to About
     console.log('4. Navigating to About...');
     const nav1Start = Date.now();
     await page.click('a[href="/about"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+    await page.waitForTimeout(1000); // Wait for SPA route change
     const nav1Time = Date.now() - nav1Start;
     metrics.actions.push({ action: 'navigate_to_about', duration: nav1Time });
     await page.waitForTimeout(500);
-    
+
     // 5. Navigate to Contact
     console.log('5. Navigating to Contact...');
     const nav2Start = Date.now();
     await page.click('a[href="/contact"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+    await page.waitForTimeout(1000); // Wait for SPA route change
     const nav2Time = Date.now() - nav2Start;
     metrics.actions.push({ action: 'navigate_to_contact', duration: nav2Time });
     await page.waitForTimeout(500);
-    
+
     // 6. Navigate back to Home
     console.log('6. Navigating back to Home...');
     const nav3Start = Date.now();
     await page.click('a[href="/"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+    await page.waitForTimeout(1000); // Wait for SPA route change
     const nav3Time = Date.now() - nav3Start;
     metrics.actions.push({ action: 'navigate_to_home', duration: nav3Time });
-    
+
     const totalTime = Date.now() - startTime;
     metrics.totalDuration = totalTime;
     metrics.actions.push({ action: 'total', duration: totalTime });
-    
+
     console.log(`Scenario A completed in ${totalTime}ms`);
-    
+
   } catch (error) {
     console.error('Error during scenario execution:', error);
     metrics.error = error.message;
   } finally {
     await browser.close();
   }
-  
+
   // Save metrics
   const outputFile = path.join(OUTPUT_DIR, 'simple.json');
   fs.appendFileSync(outputFile, JSON.stringify(metrics) + '\n');
