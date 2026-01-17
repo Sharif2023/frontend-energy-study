@@ -1,10 +1,10 @@
 /**
- * Scenario C - Complex (5,000 items)
+ * Scenario C - Complex (100 items x 500 time)
  * - Load dashboard
- * - Add 100 items × 50 → 5,000 total
+ * - Add 100 items × 500 → 50,000 total
  * - Filter + sort + multiple widget updates
  * - Rapid navigation (3 pages × 2)
- * Expected: ~30-60 seconds execution
+ * Expected: ~300-600 seconds execution
  */
 
 const puppeteer = require('puppeteer');

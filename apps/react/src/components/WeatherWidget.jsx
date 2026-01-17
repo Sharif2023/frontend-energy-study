@@ -11,34 +11,39 @@ const WeatherWidget = () => {
     const fetchWeather = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
-        // Using OpenWeatherMap API (free tier)
-        // Replace with your API key or use a mock for testing
-        const API_KEY = 'demo_key'; // Replace with actual key or use mock
-        const city = 'London';
-        
-        // For research purposes, we'll use a mock response to avoid API dependencies
-        // In real deployment, use: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-        
-        // Mock weather API call
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const mockWeather = {
-          name: city,
-          main: {
-            temp: (Math.random() * 30 + 10).toFixed(1),
-            humidity: Math.floor(Math.random() * 40 + 40)
-          },
-          weather: [{
-            description: ['sunny', 'cloudy', 'rainy', 'clear'][Math.floor(Math.random() * 4)]
-          }]
-        };
-        
-        setWeatherData(mockWeather);
+        // Fetch real weather data for Dhaka, Bangladesh
+        const API_KEY = 'e893f42ec11b61eb51029f5e25e96f60'; // OpenWeatherMap API key
+        const city = 'Dhaka';
+        const country = 'BD'; // Bangladesh country code
+
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`
+        );
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setWeatherData(data);
       } catch (err) {
         setError('Failed to fetch weather');
         console.error('Weather API error:', err);
+
+        // Fallback to mock data if API fails
+        const mockWeather = {
+          name: 'Dhaka',
+          main: {
+            temp: (Math.random() * 10 + 25).toFixed(1), // 25-35°C typical for Bangladesh
+            humidity: Math.floor(Math.random() * 30 + 60) // 60-90% typical humidity
+          },
+          weather: [{
+            description: ['clear sky', 'few clouds', 'scattered clouds', 'broken clouds'][Math.floor(Math.random() * 4)]
+          }]
+        };
+        setWeatherData(mockWeather);
       } finally {
         setLoading(false);
       }

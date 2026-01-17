@@ -221,7 +221,7 @@ cd test-scripts
 1. In **Terminal 2**: Start Scaphandre monitoring command (from Step 2)
 2. **Immediately** switch to **Terminal 3** and run the test script:
 
-**For Scenario A - Simple (100 items):**
+**For Scenario A - Simple (100 items x 50 time):**
 ```bash
 # React
 node scenario-a-simple.js react 3000
@@ -236,13 +236,13 @@ node scenario-a-simple.js angular 4200
 node scenario-a-simple.js svelte 5173
 ```
 
-**For Scenario B - Medium (1,000 items):**
+**For Scenario B - Medium (100 items x 250 time):**
 ```bash
 node scenario-b-medium.js react 3000
 # (adjust framework and port as needed)
 ```
 
-**For Scenario C - Complex (5,000 items):**
+**For Scenario C - Complex (100 items x 500 time):**
 ```bash
 node scenario-c-complex.js react 3000
 # (adjust framework and port as needed)

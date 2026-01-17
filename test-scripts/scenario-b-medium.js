@@ -1,11 +1,11 @@
 /**
- * Scenario B - Medium (1,000 items)
+ * Scenario B - Medium (100 items x 250 time)
  * - Load dashboard
- * - Add 100 items × 10 → 1,000 total
+ * - Add 100 items × 250 → 25,000 total
  * - Filter + sort → heavy computation
  * - Refresh all 25 widgets
  * - Navigate + form submission
- * Expected: ~10-20 seconds execution
+ * Expected: ~100-200 seconds execution
  */
 
 const puppeteer = require('puppeteer');

@@ -1,10 +1,10 @@
 /**
- * Scenario A - Simple (100 items)
+ * Scenario A - Simple (100 items x 50 time)
  * - Load dashboard
- * - Add 100 items → triggers re-render
+ * - Add 100 items x 50 time → 5,000 total items triggers re-render
  * - Filter items → DOM mutations
  * - Navigate between 3 pages
- * Expected: ~2-5 seconds execution
+ * Expected: ~20-50 seconds execution
  */
 
 const puppeteer = require('puppeteer');

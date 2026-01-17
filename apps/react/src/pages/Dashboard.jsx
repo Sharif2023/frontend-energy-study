@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     incrementPageLoads();
-  }, []);
+  }, [incrementPageLoads]);
 
   const handleAddItems = (amount) => {
     const newItems = Array.from({ length: amount }, (_, i) => ({
@@ -38,7 +38,7 @@ const Dashboard = () => {
   return (
     <div className="page">
       <StatsPanel itemCount={items.length} />
-      
+
       <div className="controls">
         <button id="refresh-widgets" onClick={handleRefreshWidgets}>
           Refresh Widgets
