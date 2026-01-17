@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useCallback } from 'react';
 
 const AppContext = createContext();
 
@@ -15,21 +15,21 @@ export const AppProvider = ({ children }) => {
   const [widgetRefreshCounter, setWidgetRefreshCounter] = useState(0);
   const [pageLoads, setPageLoads] = useState(0);
 
-  const incrementItemCounter = (amount) => {
+  const incrementItemCounter = useCallback((amount) => {
     setItemCounter(prev => prev + amount);
-  };
+  }, []);
 
-  const decrementItemCounter = (amount) => {
+  const decrementItemCounter = useCallback((amount) => {
     setItemCounter(prev => Math.max(0, prev - amount));
-  };
+  }, []);
 
-  const refreshWidgets = () => {
+  const refreshWidgets = useCallback(() => {
     setWidgetRefreshCounter(prev => prev + 1);
-  };
+  }, []);
 
-  const incrementPageLoads = () => {
+  const incrementPageLoads = useCallback(() => {
     setPageLoads(prev => prev + 1);
-  };
+  }, []);
 
   return (
     <AppContext.Provider value={{
