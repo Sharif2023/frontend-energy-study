@@ -40,7 +40,7 @@ async function runScenario() {
   const browser = await puppeteer.launch({
     headless: false,
     executablePath: executablePath,
-    args: ['--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
   });
 
   const page = await browser.newPage();

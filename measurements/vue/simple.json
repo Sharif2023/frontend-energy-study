@@ -35,3 +35,4 @@
     ],
     "totalDuration": 14430
 }{"scenario":"simple","framework":"vue","timestamp":"2026-01-11T10:45:54.196Z","actions":[{"action":"load_dashboard","duration":695},{"action":"add_1000_items","duration":6716,"iterations":50},{"action":"filter_items","duration":527},{"action":"navigate_to_about","duration":1034},{"action":"navigate_to_contact","duration":1028},{"action":"navigate_to_home","duration":1026},{"action":"total","duration":14034}],"totalDuration":14034}
+{"scenario":"simple","framework":"vue","timestamp":"2026-01-18T07:23:51.024Z","actions":[{"action":"load_dashboard","duration":2484},{"action":"add_1000_items","duration":13962,"iterations":50},{"action":"filter_items","duration":740},{"action":"navigate_to_about","duration":1328},{"action":"navigate_to_contact","duration":1117},{"action":"navigate_to_home","duration":1113},{"action":"total","duration":23756}],"totalDuration":23756}
