@@ -7,6 +7,7 @@
   import PlaceholderWidget from '../lib/components/PlaceholderWidget.svelte';
   
   let items = [];
+  let itemIdCounter = 0;
   const widgetIds = Array.from({ length: 24 }, (_, i) => i + 2);
   
   onMount(() => {
@@ -15,9 +16,10 @@
   
   function handleAddItems(event) {
     const amount = event.detail;
+    const currentLength = items.length;
     const newItems = Array.from({ length: amount }, (_, i) => ({
-      id: Date.now() + i,
-      name: `Item ${items.length + i + 1}`
+      id: ++itemIdCounter,
+      name: `Item ${currentLength + i + 1}`
     }));
     items = [...items, ...newItems];
     incrementItemCounter(amount);

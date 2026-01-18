@@ -1,0 +1,136 @@
+% Combined LaTeX Tables for Energy Analysis
+% Generated automatically from energy measurement data
+% Include \usepackage{booktabs} in your LaTeX preamble
+
+% Summary Statistics Table
+% Copy this into your LaTeX document
+\begin{table}[htbp]
+\centering
+\caption{Energy Consumption Summary Statistics by Framework and Scenario}
+\label{tab:energy_summary}
+\begin{tabular}{llrrrrr}
+\toprule
+\textbf{Framework} & \textbf{Scenario} & \textbf{Mean (J)} & \textbf{Std (J)} & \textbf{Min (J)} & \textbf{Max (J)} & \textbf{CV (\%)} \\
+\midrule
+Angular    & Simple   &  116.97 &   4.53 &  113.29 &  122.36 &  3.87 \\
+           & Medium   &  361.28 &   8.43 &  352.93 &  373.18 &  2.33 \\
+           & Complex  &  666.97 &  41.30 &  636.13 &  735.01 &  6.19 \\
+\midrule
+React      & Simple   &  133.69 &   2.16 &  131.30 &  136.62 &  1.61 \\
+           & Medium   &  811.08 &   8.75 &  801.98 &  823.24 &  1.08 \\
+           & Complex  &  647.42 &  29.19 &  623.52 &  688.68 &  4.51 \\
+\midrule
+Svelte     & Simple   &  125.74 &   4.54 &  120.75 &  132.73 &  3.61 \\
+           & Medium   &  431.70 &   9.55 &  417.60 &  442.43 &  2.21 \\
+           & Complex  &  810.50 &  34.11 &  789.98 &  871.07 &  4.21 \\
+\midrule
+Vue        & Simple   &   80.59 &   3.30 &   75.34 &   84.25 &  4.10 \\
+           & Medium   &  463.40 &  13.84 &  451.30 &  486.67 &  2.99 \\
+           & Complex  & 1137.62 &   9.61 & 1122.96 & 1149.00 &  0.85 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% Framework Ranking Table
+\begin{table}[htbp]
+\centering
+\caption{Framework Ranking by Energy Efficiency}
+\label{tab:framework_ranking}
+\begin{tabular}{clrrr}
+\toprule
+\textbf{Rank} & \textbf{Framework} & \textbf{Avg Energy (J)} & \textbf{Avg Power (W)} & \textbf{Consistency} \\
+\midrule
+1 & Angular  &  381.74 &   6.41 & High (CV: 4.13\%) \\
+2 & Svelte   &  455.98 &   7.46 & High (CV: 3.34\%) \\
+3 & React    &  530.73 &   9.18 & High (CV: 2.40\%) \\
+4 & Vue      &  560.54 &   7.89 & High (CV: 2.65\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% CPU Component Breakdown Table
+\begin{table}[htbp]
+\centering
+\caption{CPU Energy Component Breakdown (Core vs Uncore)}
+\label{tab:component_breakdown}
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{Framework} & \textbf{Scenario} & \textbf{Core (J)} & \textbf{Uncore (J)} & \textbf{Total (J)} & \textbf{Core \%} \\
+\midrule
+Angular    & Simple   &  104.81 &    1.13 &  105.94 &  98.9 \\
+           & Medium   &  323.28 &    2.15 &  325.43 &  99.3 \\
+           & Complex  &  602.48 &    3.14 &  605.62 &  99.5 \\
+\midrule
+React      & Simple   &  121.48 &    1.24 &  122.72 &  99.0 \\
+           & Medium   &  772.45 &    2.02 &  774.47 &  99.7 \\
+           & Complex  &  584.64 &    2.85 &  587.49 &  99.5 \\
+\midrule
+Svelte     & Simple   &  113.45 &    1.32 &  114.77 &  98.8 \\
+           & Medium   &  393.73 &    1.98 &  395.70 &  99.5 \\
+           & Complex  &  746.12 &    2.67 &  748.79 &  99.6 \\
+\midrule
+Vue        & Simple   &   68.57 &    0.93 &   69.50 &  98.7 \\
+           & Medium   &  424.95 &    2.19 &  427.14 &  99.5 \\
+           & Complex  & 1071.46 &    3.20 & 1074.67 &  99.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ANOVA Statistical Significance Table
+\begin{table}[htbp]
+\centering
+\caption{ANOVA Results for Framework Comparison}
+\label{tab:anova}
+\begin{tabular}{lrrrl}
+\toprule
+\textbf{Scenario} & \textbf{F-statistic} & \textbf{p-value} & \textbf{df} & \textbf{Significance} \\
+\midrule
+Simple   &   194.12 & 0.0000 & (3, 16) & *** \\
+Medium   &  1873.02 & 0.0000 & (3, 16) & *** \\
+Complex  &   269.35 & 0.0000 & (3, 16) & *** \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize *** p < 0.001, ** p < 0.01, * p < 0.05, ns = not significant} \\
+\end{tabular}
+\end{table}
+
+
+% Pairwise Comparison Table
+\begin{table}[htbp]
+\centering
+\caption{Pairwise Framework Comparisons (Overall)}
+\label{tab:pairwise}
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Framework 1} & \textbf{Framework 2} & \textbf{Mean Diff (J)} & \textbf{t-statistic} & \textbf{p-value} \\
+\midrule
+Angular  & React    & -148.99 &   -1.52 & 0.1399 \\
+Angular  & Svelte   &  -74.24 &   -0.77 & 0.4473 \\
+Angular  & Vue      & -178.80 &   -1.36 & 0.1848 \\
+React    & Svelte   &   74.75 &    0.69 & 0.4933 \\
+React    & Vue      &  -29.81 &   -0.21 & 0.8330 \\
+Svelte   & Vue      & -104.56 &   -0.75 & 0.4576 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% Energy Scaling Analysis Table
+\begin{table}[htbp]
+\centering
+\caption{Energy Scaling from Simple to Complex Scenario}
+\label{tab:scaling}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Framework} & \textbf{Simple (J)} & \textbf{Medium (J)} & \textbf{Complex (J)} & \textbf{Increase (\%)} \\
+\midrule
+Angular  &  116.97 &  361.28 &  666.97 &  470.2 \\
+React    &  133.69 &  811.08 &  647.42 &  384.3 \\
+Svelte   &  125.74 &  431.70 &  810.50 &  544.6 \\
+Vue      &   80.59 &  463.40 & 1137.62 & 1311.6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+

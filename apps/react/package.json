@@ -6,11 +6,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "react-scripts": "5.0.1"
+    "react-scripts": "^4.0.3"
   },
   "scripts": {
-    "start": "npx react-scripts start",
-    "build": "npx react-scripts build",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider npx react-scripts start",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider npx react-scripts build",
     "test": "npx react-scripts test",
     "eject": "npx react-scripts eject"
   },

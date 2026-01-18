@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import StatsPanel from '../components/StatsPanel';
 import ItemList from '../components/ItemList';
@@ -8,17 +8,20 @@ import PlaceholderWidget from '../components/PlaceholderWidget';
 const Dashboard = () => {
   const { incrementItemCounter, decrementItemCounter, refreshWidgets, incrementPageLoads } = useApp();
   const [items, setItems] = useState([]);
+  const itemIdCounter = useRef(0);
 
   useEffect(() => {
     incrementPageLoads();
   }, [incrementPageLoads]);
 
   const handleAddItems = (amount) => {
-    const newItems = Array.from({ length: amount }, (_, i) => ({
-      id: Date.now() + i,
-      name: `Item ${items.length + i + 1}`
-    }));
-    setItems(prev => [...prev, ...newItems]);
+    setItems(prev => {
+      const newItems = Array.from({ length: amount }, (_, i) => ({
+        id: ++itemIdCounter.current,
+        name: `Item ${prev.length + i + 1}`
+      }));
+      return [...prev, ...newItems];
+    });
     incrementItemCounter(amount);
   };
 

@@ -60,21 +60,18 @@ async function runScenario() {
     metrics.actions.push({ action: 'load_dashboard', duration: Date.now() - startTime });
     await page.waitForTimeout(1000);
 
-    // 2. Add 100 items × 500 = 50,000 items (human-like speed)
-    console.log('2. Adding 50,000 items (500 × 100) at human-like speed...');
+    // 2. Add 100 items × 500 = 50,000 items 
+    console.log('2. Adding 50,000 items (500 × 100)');
     const addStart = Date.now();
     for (let i = 0; i < 500; i++) {
       await page.click('#add-btn');
       if (i % 50 === 0) {
-        await page.waitForTimeout(500); // Longer pause every 50 clicks (like human resting)
         console.log(`   Progress: ${(i + 1) * 100} items added...`);
-      } else {
-        await page.waitForTimeout(300); // Human-like delay between clicks
       }
     }
     const addTime = Date.now() - addStart;
     metrics.actions.push({ action: 'add_50000_items', duration: addTime, iterations: 500 });
-    await page.waitForTimeout(2000); // Human pause before next action
+    await page.waitForTimeout(1000);
 
     // 3. Filter items
     console.log('3. Filtering items...');

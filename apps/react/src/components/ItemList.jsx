@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 
-const ItemList = ({ items, onAddItems, onRemoveItems }) => {
+const ItemList = React.memo(({ items, onAddItems, onRemoveItems }) => {
   const [filterQuery, setFilterQuery] = useState('');
   const [sortBy, setSortBy] = useState('id'); // 'id' or 'name'
   const [addAmount, setAddAmount] = useState(100);
@@ -15,16 +15,20 @@ const ItemList = ({ items, onAddItems, onRemoveItems }) => {
       );
     }
 
-    // Sort
-    result = [...result].sort((a, b) => {
-      if (sortBy === 'name') {
-        return a.name.localeCompare(b.name);
-      }
-      return a.id - b.id;
-    });
+    // Sort - only create new array if we need to sort by name
+    if (sortBy === 'name') {
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    }
+    // If sorting by ID, items are already in order, no need to sort
 
     return result;
   }, [items, filterQuery, sortBy]);
+
+  // Only render last 1000 items for performance, but keep all in state
+  const displayedItems = useMemo(() => {
+    const startIndex = Math.max(0, filteredAndSortedItems.length - 1000);
+    return filteredAndSortedItems.slice(startIndex);
+  }, [filteredAndSortedItems]);
 
   const handleAdd = () => {
     onAddItems(addAmount);
@@ -72,7 +76,7 @@ const ItemList = ({ items, onAddItems, onRemoveItems }) => {
           Dynamic Items (<span id="list-count">{filteredAndSortedItems.length}</span>)
         </h3>
         <ul id="item-list">
-          {filteredAndSortedItems.map((item) => (
+          {displayedItems.map((item) => (
             <li key={item.id} className="item">
               <span>ID: {item.id}</span>
               <span>{item.name}</span>
@@ -82,6 +86,6 @@ const ItemList = ({ items, onAddItems, onRemoveItems }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ItemList;

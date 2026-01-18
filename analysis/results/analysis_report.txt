@@ -1,0 +1,47 @@
+================================================================================
+ENERGY CONSUMPTION ANALYSIS REPORT
+Frontend Framework Comparison Study
+================================================================================
+
+Total measurements analyzed: 60
+Frameworks: angular, react, svelte, vue
+Scenarios: simple, medium, complex
+Runs per scenario: 5
+
+--------------------------------------------------------------------------------
+OVERALL FRAMEWORK RANKING (by average total energy)
+--------------------------------------------------------------------------------
+1. Angular    - 381.74 J (avg)
+2. Svelte     - 455.98 J (avg)
+3. React      - 530.73 J (avg)
+4. Vue        - 560.54 J (avg)
+
+--------------------------------------------------------------------------------
+SCENARIO-WISE COMPARISON
+--------------------------------------------------------------------------------
+
+SIMPLE Scenario:
+  Vue       :    80.59 J ±   3.30 J (CV:  4.10%)
+  Angular   :   116.97 J ±   4.53 J (CV:  3.87%)
+  Svelte    :   125.74 J ±   4.54 J (CV:  3.61%)
+  React     :   133.69 J ±   2.16 J (CV:  1.61%)
+
+MEDIUM Scenario:
+  Angular   :   361.28 J ±   8.43 J (CV:  2.33%)
+  Svelte    :   431.70 J ±   9.55 J (CV:  2.21%)
+  Vue       :   463.40 J ±  13.84 J (CV:  2.99%)
+  React     :   811.08 J ±   8.75 J (CV:  1.08%)
+
+COMPLEX Scenario:
+  React     :   647.42 J ±  29.19 J (CV:  4.51%)
+  Angular   :   666.97 J ±  41.30 J (CV:  6.19%)
+  Svelte    :   810.50 J ±  34.11 J (CV:  4.21%)
+  Vue       :  1137.62 J ±   9.61 J (CV:  0.85%)
+
+--------------------------------------------------------------------------------
+ENERGY EFFICIENCY INSIGHTS
+--------------------------------------------------------------------------------
+Most consistent: React (avg CV: 2.40%)
+Best scaling: React (384.3% increase from simple to complex)
+
+================================================================================

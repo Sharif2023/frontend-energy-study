@@ -1,0 +1,28 @@
+% Summary Statistics Table
+% Copy this into your LaTeX document
+\begin{table}[htbp]
+\centering
+\caption{Energy Consumption Summary Statistics by Framework and Scenario}
+\label{tab:energy_summary}
+\begin{tabular}{llrrrrr}
+\toprule
+\textbf{Framework} & \textbf{Scenario} & \textbf{Mean (J)} & \textbf{Std (J)} & \textbf{Min (J)} & \textbf{Max (J)} & \textbf{CV (\%)} \\
+\midrule
+Angular    & Simple   &  116.97 &   4.53 &  113.29 &  122.36 &  3.87 \\
+           & Medium   &  361.28 &   8.43 &  352.93 &  373.18 &  2.33 \\
+           & Complex  &  666.97 &  41.30 &  636.13 &  735.01 &  6.19 \\
+\midrule
+React      & Simple   &  133.69 &   2.16 &  131.30 &  136.62 &  1.61 \\
+           & Medium   &  811.08 &   8.75 &  801.98 &  823.24 &  1.08 \\
+           & Complex  &  647.42 &  29.19 &  623.52 &  688.68 &  4.51 \\
+\midrule
+Svelte     & Simple   &  125.74 &   4.54 &  120.75 &  132.73 &  3.61 \\
+           & Medium   &  431.70 &   9.55 &  417.60 &  442.43 &  2.21 \\
+           & Complex  &  810.50 &  34.11 &  789.98 &  871.07 &  4.21 \\
+\midrule
+Vue        & Simple   &   80.59 &   3.30 &   75.34 &   84.25 &  4.10 \\
+           & Medium   &  463.40 &  13.84 &  451.30 &  486.67 &  2.99 \\
+           & Complex  & 1137.62 &   9.61 & 1122.96 & 1149.00 &  0.85 \\
+\bottomrule
+\end{tabular}
+\end{table}

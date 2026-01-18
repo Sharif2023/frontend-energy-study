@@ -1,0 +1,27 @@
+% CPU Component Breakdown Table
+\begin{table}[htbp]
+\centering
+\caption{CPU Energy Component Breakdown (Core vs Uncore)}
+\label{tab:component_breakdown}
+\begin{tabular}{llrrrr}
+\toprule
+\textbf{Framework} & \textbf{Scenario} & \textbf{Core (J)} & \textbf{Uncore (J)} & \textbf{Total (J)} & \textbf{Core \%} \\
+\midrule
+Angular    & Simple   &  104.81 &    1.13 &  105.94 &  98.9 \\
+           & Medium   &  323.28 &    2.15 &  325.43 &  99.3 \\
+           & Complex  &  602.48 &    3.14 &  605.62 &  99.5 \\
+\midrule
+React      & Simple   &  121.48 &    1.24 &  122.72 &  99.0 \\
+           & Medium   &  772.45 &    2.02 &  774.47 &  99.7 \\
+           & Complex  &  584.64 &    2.85 &  587.49 &  99.5 \\
+\midrule
+Svelte     & Simple   &  113.45 &    1.32 &  114.77 &  98.8 \\
+           & Medium   &  393.73 &    1.98 &  395.70 &  99.5 \\
+           & Complex  &  746.12 &    2.67 &  748.79 &  99.6 \\
+\midrule
+Vue        & Simple   &   68.57 &    0.93 &   69.50 &  98.7 \\
+           & Medium   &  424.95 &    2.19 &  427.14 &  99.5 \\
+           & Complex  & 1071.46 &    3.20 & 1074.67 &  99.7 \\
+\bottomrule
+\end{tabular}
+\end{table}

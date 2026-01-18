@@ -159,7 +159,7 @@ Based on the research methodology, there are **3 test scenarios** with increasin
 
 **Important Notes:**
 - Each framework should be tested with all 3 scenarios (Simple, Medium, Complex)
-- Repeat each test **10 times** for statistical validity (120+ total runs)
+- Repeat each test **5 times** for statistical validity (15 total runs)
 - Allow **10-minute cooldown** between runs to stabilize system temperature
 - Close unnecessary applications to minimize interference
 
@@ -198,14 +198,14 @@ Open **Terminal 2** for energy monitoring.
 
 | Scenario | Expected Duration | Scaphandre Duration |
 |----------|-------------------|---------------------|
-| A - Simple | 20-50 seconds | `-t 60` (60 seconds) |
-| B - Medium | 100-200 seconds | `-t 300` (5 minutes) |
-| C - Complex | 300-600 seconds | `-t 720` (12 minutes) |
+| A - Simple | 20-50 seconds | `-t 20` (20 seconds) |
+| B - Medium | 100-200 seconds | `-t 60` (60 seconds) |
+| C - Complex | 300-600 seconds | `-t 100` (100 seconds) |
 
 **Prepare the command (DO NOT RUN YET):**
 ```bash
 cd ~/Downloads/frontend-energy-study
-sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json
+sudo scaphandre json -t 20 -f measurements/react/energy_simple_run1.json
 ```
 
 **File naming convention:**
@@ -214,8 +214,8 @@ measurements/{framework}/energy_{scenario}_run{number}.json
 
 Examples:
 - measurements/react/energy_simple_run1.json
-- measurements/vue/energy_medium_run5.json
-- measurements/angular/energy_complex_run10.json
+- measurements/vue/energy_medium_run2.json
+- measurements/angular/energy_complex_run5.json
 ```
 
 ⚠️ **Do NOT start this command yet!** Wait until you're ready to run the test scenario.
@@ -243,28 +243,28 @@ cd ~/Downloads/frontend-energy-study/test-scripts
 
 | Framework | Terminal 1 (App) | Terminal 2 (Energy) | Terminal 3 (Test) |
 |-----------|------------------|---------------------|-------------------|
-| React | `cd apps/react && npm start` | `sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json` | `node scenario-a-simple.js react 3000` |
-| Vue | `cd apps/vue && npm run serve` | `sudo scaphandre json -t 60 -f measurements/vue/energy_simple_run1.json` | `node scenario-a-simple.js vue 8080` |
-| Angular | `cd apps/angular && npm start` | `sudo scaphandre json -t 60 -f measurements/angular/energy_simple_run1.json` | `node scenario-a-simple.js angular 4200` |
-| Svelte | `cd apps/svelte && npm run dev` | `sudo scaphandre json -t 60 -f measurements/svelte/energy_simple_run1.json` | `node scenario-a-simple.js svelte 5173` |
+| React | `cd apps/react && npm start` | `sudo scaphandre json -t 20 -f measurements/react/energy_simple_run1.json` | `node scenario-a-simple.js react 3000` |
+| Vue | `cd apps/vue && npm run serve` | `sudo scaphandre json -t 20 -f measurements/vue/energy_simple_run1.json` | `node scenario-a-simple.js vue 8080` |
+| Angular | `cd apps/angular && npm start` | `sudo scaphandre json -t 20 -f measurements/angular/energy_simple_run1.json` | `node scenario-a-simple.js angular 4200` |
+| Svelte | `cd apps/svelte && npm run dev` | `sudo scaphandre json -t 20 -f measurements/svelte/energy_simple_run1.json` | `node scenario-a-simple.js svelte 5173` |
 
 #### Scenario B - Medium (100 items × 250 time)
 
 | Framework | Terminal 2 (Energy) | Terminal 3 (Test) |
 |-----------|---------------------|-------------------|
-| React | `sudo scaphandre json -t 300 -f measurements/react/energy_medium_run1.json` | `node scenario-b-medium.js react 3000` |
-| Vue | `sudo scaphandre json -t 300 -f measurements/vue/energy_medium_run1.json` | `node scenario-b-medium.js vue 8080` |
-| Angular | `sudo scaphandre json -t 300 -f measurements/angular/energy_medium_run1.json` | `node scenario-b-medium.js angular 4200` |
-| Svelte | `sudo scaphandre json -t 300 -f measurements/svelte/energy_medium_run1.json` | `node scenario-b-medium.js svelte 5173` |
+| React | `sudo scaphandre json -t 60 -f measurements/react/energy_medium_run1.json` | `node scenario-b-medium.js react 3000` |
+| Vue | `sudo scaphandre json -t 60 -f measurements/vue/energy_medium_run1.json` | `node scenario-b-medium.js vue 8080` |
+| Angular | `sudo scaphandre json -t 60 -f measurements/angular/energy_medium_run1.json` | `node scenario-b-medium.js angular 4200` |
+| Svelte | `sudo scaphandre json -t 60 -f measurements/svelte/energy_medium_run1.json` | `node scenario-b-medium.js svelte 5173` |
 
 #### Scenario C - Complex (100 items × 500 time)
 
 | Framework | Terminal 2 (Energy) | Terminal 3 (Test) |
 |-----------|---------------------|-------------------|
-| React | `sudo scaphandre json -t 720 -f measurements/react/energy_complex_run1.json` | `node scenario-c-complex.js react 3000` |
-| Vue | `sudo scaphandre json -t 720 -f measurements/vue/energy_complex_run1.json` | `node scenario-c-complex.js vue 8080` |
-| Angular | `sudo scaphandre json -t 720 -f measurements/angular/energy_complex_run1.json` | `node scenario-c-complex.js angular 4200` |
-| Svelte | `sudo scaphandre json -t 720 -f measurements/svelte/energy_complex_run1.json` | `node scenario-c-complex.js svelte 5173` |
+| React | `sudo scaphandre json -t 100 -f measurements/react/energy_complex_run1.json` | `node scenario-c-complex.js react 3000` |
+| Vue | `sudo scaphandre json -t 100 -f measurements/vue/energy_complex_run1.json` | `node scenario-c-complex.js vue 8080` |
+| Angular | `sudo scaphandre json -t 100 -f measurements/angular/energy_complex_run1.json` | `node scenario-c-complex.js angular 4200` |
+| Svelte | `sudo scaphandre json -t 100 -f measurements/svelte/energy_complex_run1.json` | `node scenario-c-complex.js svelte 5173` |
 
 ---
 
@@ -347,29 +347,29 @@ Add these fields to the JSON:
 #### Step 6: Repeat for Statistical Validity
 
 **For each framework and scenario combination:**
-1. Repeat the data collection **10 times** (e.g., `run1` through `run10`)
+1. Repeat the data collection **5 times** (e.g., `run1` through `run5`)
 2. Wait **10 minutes** between runs to allow system cooldown
 3. Increment the run number in filename for each repetition
 
-**Example for React Simple scenario (10 runs):**
+**Example for React Simple scenario (5 runs):**
 ```bash
 # Run 1
-sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json
+sudo scaphandre json -t 20 -f measurements/react/energy_simple_run1.json
 node scenario-a-simple.js react 3000
 # Wait 10 minutes
 
 # Run 2
-sudo scaphandre json -t 60 -f measurements/react/energy_simple_run2.json
+sudo scaphandre json -t 20 -f measurements/react/energy_simple_run2.json
 node scenario-a-simple.js react 3000
 # Wait 10 minutes
 
-# ... continue until run10
+# ... continue until run5
 ```
 
 **Total runs needed:**
 ```
-4 frameworks × 3 scenarios × 10 repetitions = 120 runs
-Estimated total time: ~40 hours (spread across multiple days)
+4 frameworks × 3 scenarios × 5 repetitions = 60 runs
+Estimated total time: ~2 hours (spread across multiple days)
 ```
 
 ---
@@ -390,7 +390,7 @@ npm start
 ```bash
 cd ~/Downloads/frontend-energy-study
 # Type this command but DON'T press Enter yet:
-sudo scaphandre json -t 60 -f measurements/react/energy_simple_run1.json
+sudo scaphandre json -t 20 -f measurements/react/energy_simple_run1.json
 ```
 
 ### Terminal 3: Prepare Test Script
@@ -483,14 +483,14 @@ Once you have collected data for all frameworks and scenarios:
 
 | Scenario | Script | Items | Duration |
 |----------|--------|-------|----------|
-| Simple | `node scenario-a-simple.js {framework} {port}` | 5,000 | 20-50s |
-| Medium | `node scenario-b-medium.js {framework} {port}` | 25,000 | 100-200s |
-| Complex | `node scenario-c-complex.js {framework} {port}` | 50,000 | 300-600s |
+| Simple | `node scenario-a-simple.js {framework} {port}` | 5,000 | ~20s |
+| Medium | `node scenario-b-medium.js {framework} {port}` | 25,000 | ~60s |
+| Complex | `node scenario-c-complex.js {framework} {port}` | 50,000 | ~100s |
 
 ### Scaphandre Duration Settings
 
 | Scenario | Duration Flag |
 |----------|---------------|
-| Simple | `-t 60` |
-| Medium | `-t 300` |
-| Complex | `-t 720` |
+| Simple | `-t 20` |
+| Medium | `-t 60` |
+| Complex | `-t 100` |
