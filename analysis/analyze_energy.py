@@ -18,6 +18,9 @@ FRAMEWORKS = ["angular", "react", "svelte", "vue"]
 SCENARIOS = ["simple", "medium", "complex"]
 RUNS = 5
 
+# Bangladesh Grid Emission Factor (GEF)
+BANGLADESH_GEF = 632  # g CO2/kWh
+
 def parse_energy_file(filepath: Path) -> Dict:
     """
     Parse a single energy measurement JSON file and extract key metrics.
@@ -111,18 +114,32 @@ def collect_all_measurements() -> pd.DataFrame:
                 metrics = parse_energy_file(filepath)
                 
                 if metrics:
+                    # Calculate kWh values
+                    total_energy_kwh = (metrics['total_energy'] / 1_000_000) / 3_600_000
+                    core_energy_kwh = (metrics['core_energy'] / 1_000_000) / 3_600_000
+                    uncore_energy_kwh = (metrics['uncore_energy'] / 1_000_000) / 3_600_000
+                    
+                    # Calculate CO2 emissions
+                    co2_emissions_g = total_energy_kwh * BANGLADESH_GEF
+                    co2_emissions_kg = co2_emissions_g / 1000
+                    
                     results.append({
                         'framework': framework,
                         'scenario': scenario,
                         'run': run,
                         'total_energy_uJ': metrics['total_energy'],
                         'total_energy_J': metrics['total_energy'] / 1_000_000,
+                        'total_energy_kWh': total_energy_kwh,
                         'core_energy_uJ': metrics['core_energy'],
                         'core_energy_J': metrics['core_energy'] / 1_000_000,
+                        'core_energy_kWh': core_energy_kwh,
                         'uncore_energy_uJ': metrics['uncore_energy'],
                         'uncore_energy_J': metrics['uncore_energy'] / 1_000_000,
+                        'uncore_energy_kWh': uncore_energy_kwh,
                         'duration_s': metrics['duration'],
                         'avg_power_W': metrics['avg_power'] / 1_000_000,
+                        'co2_emissions_g': co2_emissions_g,
+                        'co2_emissions_kg': co2_emissions_kg,
                         'samples': metrics['samples']
                     })
     
@@ -134,11 +151,16 @@ def calculate_statistics(df: pd.DataFrame) -> pd.DataFrame:
     """
     stats = df.groupby(['framework', 'scenario']).agg({
         'total_energy_J': ['mean', 'std', 'min', 'max', 'median'],
+        'total_energy_kWh': ['mean', 'std', 'min', 'max', 'median'],
         'core_energy_J': ['mean', 'std'],
+        'core_energy_kWh': ['mean', 'std'],
         'uncore_energy_J': ['mean', 'std'],
+        'uncore_energy_kWh': ['mean', 'std'],
         'avg_power_W': ['mean', 'std'],
+        'co2_emissions_g': ['mean', 'std', 'min', 'max', 'median'],
+        'co2_emissions_kg': ['mean', 'std', 'min', 'max', 'median'],
         'duration_s': ['mean', 'std']
-    }).round(4)
+    }).round(8)
     
     # Flatten column names
     stats.columns = ['_'.join(col).strip() for col in stats.columns.values]
@@ -159,8 +181,8 @@ def generate_summary_report(df: pd.DataFrame, stats: pd.DataFrame) -> str:
     """
     report = []
     report.append("=" * 80)
-    report.append("ENERGY CONSUMPTION ANALYSIS REPORT")
-    report.append("Frontend Framework Comparison Study")
+    report.append("ENERGY CONSUMPTION & CARBON FOOTPRINT ANALYSIS")
+    report.append("Frontend Framework Comparison Study (Bangladesh)")
     report.append("=" * 80)
     report.append("")
     
@@ -168,6 +190,7 @@ def generate_summary_report(df: pd.DataFrame, stats: pd.DataFrame) -> str:
     report.append(f"Frameworks: {', '.join(FRAMEWORKS)}")
     report.append(f"Scenarios: {', '.join(SCENARIOS)}")
     report.append(f"Runs per scenario: {RUNS}")
+    report.append(f"Bangladesh Grid Emission Factor: {BANGLADESH_GEF} g CO₂/kWh")
     report.append("")
     
     report.append("-" * 80)
@@ -188,10 +211,20 @@ def generate_summary_report(df: pd.DataFrame, stats: pd.DataFrame) -> str:
         scenario_data = stats[stats['scenario'] == scenario].sort_values('total_energy_J_mean')
         for _, row in scenario_data.iterrows():
             report.append(f"  {row['framework'].capitalize():10s}: "
-                        f"{row['total_energy_J_mean']:8.2f} J ± {row['total_energy_J_std']:6.2f} J "
-                        f"(CV: {row['energy_cv']:5.2f}%)")
+                        f"{row['total_energy_J_mean']:8.2f} J ({row['total_energy_kWh_mean']:.8f} kWh) | "
+                        f"CO₂: {row['co2_emissions_g_mean']:.6f} g ({row['co2_emissions_kg_mean']:.8f} kg)")
     
     report.append("")
+    report.append("-" * 80)
+    report.append("CARBON FOOTPRINT RANKING (by CO₂ emissions)")
+    report.append("-" * 80)
+    
+    co2_ranking = df.groupby('framework')['co2_emissions_g'].mean().sort_values()
+    for rank, (framework, co2) in enumerate(co2_ranking.items(), 1):
+        co2_kg = co2 / 1000
+        report.append(f"{rank}. {framework.capitalize():10s} - {co2:.6f} g CO₂ ({co2_kg:.8f} kg CO₂) (avg)")
+    report.append("")
+    
     report.append("-" * 80)
     report.append("ENERGY EFFICIENCY INSIGHTS")
     report.append("-" * 80)

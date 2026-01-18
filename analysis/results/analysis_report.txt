@@ -1,12 +1,13 @@
 ================================================================================
-ENERGY CONSUMPTION ANALYSIS REPORT
-Frontend Framework Comparison Study
+ENERGY CONSUMPTION & CARBON FOOTPRINT ANALYSIS
+Frontend Framework Comparison Study (Bangladesh)
 ================================================================================
 
 Total measurements analyzed: 60
 Frameworks: angular, react, svelte, vue
 Scenarios: simple, medium, complex
 Runs per scenario: 5
+Bangladesh Grid Emission Factor: 632 g CO2/kWh
 
 --------------------------------------------------------------------------------
 OVERALL FRAMEWORK RANKING (by average total energy)
@@ -21,22 +22,30 @@ SCENARIO-WISE COMPARISON
 --------------------------------------------------------------------------------
 
 SIMPLE Scenario:
-  Vue       :    80.59 J ±   3.30 J (CV:  4.10%)
-  Angular   :   116.97 J ±   4.53 J (CV:  3.87%)
-  Svelte    :   125.74 J ±   4.54 J (CV:  3.61%)
-  React     :   133.69 J ±   2.16 J (CV:  1.61%)
+  Vue       :    80.59 J (0.00002239 kWh) | CO2: 0.014148 g (0.00001415 kg)
+  Angular   :   116.97 J (0.00003249 kWh) | CO2: 0.020535 g (0.00002054 kg)
+  Svelte    :   125.74 J (0.00003493 kWh) | CO2: 0.022075 g (0.00002207 kg)
+  React     :   133.69 J (0.00003713 kWh) | CO2: 0.023469 g (0.00002347 kg)
 
 MEDIUM Scenario:
-  Angular   :   361.28 J ±   8.43 J (CV:  2.33%)
-  Svelte    :   431.70 J ±   9.55 J (CV:  2.21%)
-  Vue       :   463.40 J ±  13.84 J (CV:  2.99%)
-  React     :   811.08 J ±   8.75 J (CV:  1.08%)
+  Angular   :   361.28 J (0.00010036 kWh) | CO2: 0.063425 g (0.00006343 kg)
+  Svelte    :   431.70 J (0.00011992 kWh) | CO2: 0.075787 g (0.00007579 kg)
+  Vue       :   463.40 J (0.00012872 kWh) | CO2: 0.081353 g (0.00008135 kg)
+  React     :   811.08 J (0.00022530 kWh) | CO2: 0.142390 g (0.00014239 kg)
 
 COMPLEX Scenario:
-  React     :   647.42 J ±  29.19 J (CV:  4.51%)
-  Angular   :   666.97 J ±  41.30 J (CV:  6.19%)
-  Svelte    :   810.50 J ±  34.11 J (CV:  4.21%)
-  Vue       :  1137.62 J ±   9.61 J (CV:  0.85%)
+  React     :   647.42 J (0.00017984 kWh) | CO2: 0.113658 g (0.00011366 kg)
+  Angular   :   666.97 J (0.00018527 kWh) | CO2: 0.117090 g (0.00011709 kg)
+  Svelte    :   810.50 J (0.00022514 kWh) | CO2: 0.142288 g (0.00014229 kg)
+  Vue       :  1137.62 J (0.00031600 kWh) | CO2: 0.199715 g (0.00019972 kg)
+
+--------------------------------------------------------------------------------
+CARBON FOOTPRINT RANKING (by CO2 emissions)
+--------------------------------------------------------------------------------
+1. Angular    - 0.067017 g CO2 (0.00006702 kg CO2) (avg)
+2. Svelte     - 0.080050 g CO2 (0.00008005 kg CO2) (avg)
+3. React      - 0.093172 g CO2 (0.00009317 kg CO2) (avg)
+4. Vue        - 0.098405 g CO2 (0.00009841 kg CO2) (avg)
 
 --------------------------------------------------------------------------------
 ENERGY EFFICIENCY INSIGHTS

@@ -17,6 +17,9 @@ DIAGRAMS_DIR = RESULTS_DIR / "diagrams"
 FRAMEWORKS = ["angular", "react", "svelte", "vue"]
 SCENARIOS = ["simple", "medium", "complex"]
 
+# Bangladesh Grid Emission Factor (GEF)
+BANGLADESH_GEF = 632  # g CO2/kWh
+
 # Set publication-quality style
 plt.style.use('seaborn-v0_8-paper')
 sns.set_palette("husl")
@@ -62,7 +65,7 @@ def plot_overall_comparison(df, stats):
     
     ax.set_xlabel('Framework', fontweight='bold')
     ax.set_ylabel('Total Energy Consumption (J)', fontweight='bold')
-    ax.set_title('Overall Energy Consumption Comparison Across Frontend Frameworks', 
+    ax.set_title('Overall Energy Consumption Comparison Across Frontend Frameworks\n(Bangladesh GEF: 632 g CO₂/kWh)', 
                  fontweight='bold', pad=20)
     ax.set_xticks(range(len(overall)))
     ax.set_xticklabels([fw.capitalize() for fw in overall['framework']])
@@ -103,7 +106,7 @@ def plot_scenario_comparison(stats):
     
     ax.set_xlabel('Test Scenario', fontweight='bold')
     ax.set_ylabel('Energy Consumption (J)', fontweight='bold')
-    ax.set_title('Energy Consumption by Framework and Scenario', 
+    ax.set_title('Energy Consumption by Framework and Scenario\n(Lower is Better for Environment)', 
                  fontweight='bold', pad=20)
     ax.set_xticks(x)
     ax.set_xticklabels([s.capitalize() for s in SCENARIOS])
@@ -432,6 +435,67 @@ def plot_statistical_summary(df, stats):
     print("✓ Generated: 08_statistical_summary.png")
     plt.close()
 
+def plot_co2_emissions_comparison(df, stats):
+    """
+    Diagram 9: CO₂ Emissions Comparison (Bangladesh GEF: 632 g CO₂/kWh).
+    """
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    
+    # Plot 1: Overall CO₂ emissions bar chart
+    overall_co2 = df.groupby('framework')['co2_emissions_g'].agg(['mean', 'std']).reset_index()
+    overall_co2 = overall_co2.sort_values('mean')
+    
+    colors = [COLORS[fw] for fw in overall_co2['framework']]
+    
+    bars = ax1.bar(range(len(overall_co2)), overall_co2['mean'], 
+                   yerr=overall_co2['std'], capsize=5,
+                   color=colors, alpha=0.8, edgecolor='black', linewidth=1.2)
+    
+    ax1.set_xlabel('Framework', fontweight='bold')
+    ax1.set_ylabel('CO₂ Emissions (g)', fontweight='bold')
+    ax1.set_title('Overall CO₂ Emissions Comparison\\n(Bangladesh GEF: 632 g CO₂/kWh)', 
+                  fontweight='bold', pad=20)
+    ax1.set_xticks(range(len(overall_co2)))
+    ax1.set_xticklabels([fw.capitalize() for fw in overall_co2['framework']])
+    ax1.grid(axis='y', alpha=0.3, linestyle='--')
+    
+    # Add value labels on bars
+    for i, (bar, row) in enumerate(zip(bars, overall_co2.itertuples())):
+        height = bar.get_height()
+        ax1.text(bar.get_x() + bar.get_width()/2., height,
+                f'{row.mean:.6f}g\\n±{row.std:.6f}',
+                ha='center', va='bottom', fontsize=8, fontweight='bold')
+    
+    # Plot 2: CO₂ emissions by scenario (grouped bars)
+    x = np.arange(len(SCENARIOS))
+    width = 0.2
+    
+    for i, framework in enumerate(FRAMEWORKS):
+        fw_data = stats[stats['framework'] == framework].sort_values('scenario', 
+                       key=lambda x: x.map({s: i for i, s in enumerate(SCENARIOS)}))
+        
+        means = fw_data['co2_emissions_g_mean'].values
+        stds = fw_data['co2_emissions_g_std'].values
+        
+        offset = (i - 1.5) * width
+        bars = ax2.bar(x + offset, means, width, label=framework.capitalize(),
+                      yerr=stds, capsize=3, color=COLORS[framework], 
+                      alpha=0.8, edgecolor='black', linewidth=0.8)
+    
+    ax2.set_xlabel('Test Scenario', fontweight='bold')
+    ax2.set_ylabel('CO₂ Emissions (g)', fontweight='bold')
+    ax2.set_title('CO₂ Emissions by Framework and Scenario\\n(Lower emissions = Greener choice)', 
+                  fontweight='bold', pad=20)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels([s.capitalize() for s in SCENARIOS])
+    ax2.legend(title='Framework', loc='upper left', framealpha=0.9)
+    ax2.grid(axis='y', alpha=0.3, linestyle='--')
+    
+    plt.tight_layout()
+    plt.savefig(DIAGRAMS_DIR / "09_co2_emissions_comparison.png", bbox_inches='tight')
+    print("✓ Generated: 09_co2_emissions_comparison.png")
+    plt.close()
+
 def main():
     """Main execution function."""
     print("Starting visualization generation...")
@@ -455,10 +519,11 @@ def main():
     plot_heatmap(stats)
     plot_timeseries_power(df)
     plot_statistical_summary(df, stats)
+    plot_co2_emissions_comparison(df, stats)  # New CO₂ diagram
     
     print(f"\n✓ All diagrams generated successfully in {DIAGRAMS_DIR}")
     print("\nGenerated files:")
-    for i in range(1, 9):
+    for i in range(1, 10):  # Updated to 10 diagrams
         print(f"  {i:02d}_*.png")
 
 if __name__ == "__main__":

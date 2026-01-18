@@ -12,6 +12,9 @@ from datetime import datetime
 
 MEASUREMENTS_DIR = os.path.join(os.path.dirname(__file__), '..', 'measurements')
 
+# Bangladesh Grid Emission Factor (GEF)
+BANGLADESH_GEF = 632  # g CO2/kWh
+
 def parse_scaphandre_json(filepath):
     """Parse Scaphandre JSON file and extract energy metrics."""
     try:
@@ -58,10 +61,22 @@ def parse_scaphandre_json(filepath):
         socket_total_uj = sum(socket_consumptions) if socket_consumptions else 0
         socket_total_joules = socket_total_uj / 1_000_000
         
+        # Convert to kWh (1 kWh = 3,600,000 J)
+        total_energy_kwh = total_energy_joules / 3_600_000
+        socket_energy_kwh = socket_total_joules / 3_600_000
+        
+        # Calculate CO2 emissions using Bangladesh GEF (632 g CO2/kWh)
+        co2_emissions_g = total_energy_kwh * BANGLADESH_GEF
+        co2_emissions_kg = co2_emissions_g / 1000
+        
         return {
             'total_energy_joules': round(total_energy_joules, 4),
+            'total_energy_kwh': round(total_energy_kwh, 8),
             'peak_power_watts': round(peak_power_watts, 4),
             'socket_energy_joules': round(socket_total_joules, 4),
+            'socket_energy_kwh': round(socket_energy_kwh, 8),
+            'co2_emissions_g': round(co2_emissions_g, 6),
+            'co2_emissions_kg': round(co2_emissions_kg, 8),
             'sample_count': len(records),
             'source_file': os.path.basename(filepath)
         }
@@ -102,8 +117,12 @@ def merge_with_performance_data(framework, scenario, energy_data):
         
         # Merge energy data into the record
         last_record['energy_joules'] = energy_data['total_energy_joules']
+        last_record['energy_kwh'] = energy_data['total_energy_kwh']
         last_record['peak_power_watts'] = energy_data['peak_power_watts']
         last_record['socket_energy_joules'] = energy_data['socket_energy_joules']
+        last_record['socket_energy_kwh'] = energy_data['socket_energy_kwh']
+        last_record['co2_emissions_g'] = energy_data['co2_emissions_g']
+        last_record['co2_emissions_kg'] = energy_data['co2_emissions_kg']
         last_record['energy_sample_count'] = energy_data['sample_count']
         last_record['energy_source_file'] = energy_data['source_file']
         
@@ -154,10 +173,11 @@ def process_framework_scenario(framework, scenario):
         return None
     
     print(f"\nEnergy Metrics:")
-    print(f"  Total Energy: {energy_data['total_energy_joules']:.4f} Joules")
-    print(f"  Peak Power:   {energy_data['peak_power_watts']:.4f} Watts")
-    print(f"  Socket Energy:{energy_data['socket_energy_joules']:.4f} Joules")
-    print(f"  Samples:      {energy_data['sample_count']}")
+    print(f"  Total Energy:     {energy_data['total_energy_joules']:.4f} J ({energy_data['total_energy_kwh']:.8f} kWh)")
+    print(f"  Peak Power:       {energy_data['peak_power_watts']:.4f} W")
+    print(f"  Socket Energy:    {energy_data['socket_energy_joules']:.4f} J ({energy_data['socket_energy_kwh']:.8f} kWh)")
+    print(f"  CO₂ Emissions:    {energy_data['co2_emissions_g']:.6f} g ({energy_data['co2_emissions_kg']:.8f} kg)")
+    print(f"  Samples:          {energy_data['sample_count']}")
     
     # Merge with performance data
     merged = merge_with_performance_data(framework, scenario, energy_data)
