@@ -119,9 +119,9 @@ Based on the research methodology, there are **3 test scenarios** with increasin
 
 | Scenario | Description | Items Added | Expected Duration |
 |----------|-------------|-------------|-------------------|
-| **A - Simple** | 100 items × 50 times | 5,000 total | ~20-50 seconds |
-| **B - Medium** | 100 items × 250 times | 25,000 total | ~100-200 seconds |
-| **C - Complex** | 100 items × 500 times | 50,000 total | ~300-600 seconds |
+| **A - Simple** | 100 items × 50 times | 5,000 total | ~15-20 seconds |
+| **B - Medium** | 100 items × 250 times | 25,000 total | ~50-60 seconds |
+| **C - Complex** | 100 items × 500 times | 50,000 total | ~80-100 seconds |
 
 ### What Each Scenario Tests:
 
@@ -198,9 +198,9 @@ Open **Terminal 2** for energy monitoring.
 
 | Scenario | Expected Duration | Scaphandre Duration |
 |----------|-------------------|---------------------|
-| A - Simple | 20-50 seconds | `-t 20` (20 seconds) |
-| B - Medium | 100-200 seconds | `-t 60` (60 seconds) |
-| C - Complex | 300-600 seconds | `-t 100` (100 seconds) |
+| A - Simple | ~15-20 seconds | `-t 20` (20 seconds) |
+| B - Medium | ~50-60 seconds | `-t 60` (60 seconds) |
+| C - Complex | ~80-100 seconds | `-t 100` (100 seconds) |
 
 **Prepare the command (DO NOT RUN YET):**
 ```bash
@@ -483,9 +483,9 @@ Once you have collected data for all frameworks and scenarios:
 
 | Scenario | Script | Items | Duration |
 |----------|--------|-------|----------|
-| Simple | `node scenario-a-simple.js {framework} {port}` | 5,000 | ~20s |
-| Medium | `node scenario-b-medium.js {framework} {port}` | 25,000 | ~60s |
-| Complex | `node scenario-c-complex.js {framework} {port}` | 50,000 | ~100s |
+| Simple | `node scenario-a-simple.js {framework} {port}` | 5,000 | ~15-20s |
+| Medium | `node scenario-b-medium.js {framework} {port}` | 25,000 | ~50-60s |
+| Complex | `node scenario-c-complex.js {framework} {port}` | 50,000 | ~80-100s |
 
 ### Scaphandre Duration Settings
 

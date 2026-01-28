@@ -56,10 +56,10 @@ Each framework application implements identical functionality:
 
 ### Scenario A - Simple (100 items x 50 time)
 - Load dashboard
-- Add 100 items x 50 time → 1,000 total items triggers re-render
+- Add 100 items x 50 time → 5,000 total items triggers re-render
 - Filter items → DOM mutations
 - Navigate between 3 pages
-- **Expected duration**: ~20-50 seconds
+- **Expected duration**: ~15-20 seconds
 
 ### Scenario B - Medium (1,00 items x 250 time)
 - Load dashboard
@@ -67,14 +67,14 @@ Each framework application implements identical functionality:
 - Filter + sort → heavy computation
 - Refresh all 25 widgets
 - Navigate + form submission
-- **Expected duration**: ~100-200 seconds
+- **Expected duration**: ~50-60 seconds
 
 ### Scenario C - Complex (100 items x 500 time)
 - Load dashboard
 - Add 100 items × 500 → 50,000 total
 - Filter + sort + multiple widget updates
 - Rapid navigation (3 pages × 2)
-- **Expected duration**: ~300-600 seconds
+- **Expected duration**: ~80-100 seconds
 
 ## Setup Instructions
 
@@ -242,8 +242,8 @@ The analysis script generates:
 ## Experiment Design
 
 ### Sample Size
-- 120+ runs total
-- 4 frameworks × 3 workloads × 10 repetitions
+- 60 runs total
+- 4 frameworks × 3 workloads × 5 repetitions
 - Daily measurements (~2 hours) with 10-minute cooldowns
 
 ### Variables
